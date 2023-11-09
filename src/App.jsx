@@ -1,51 +1,40 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
-import Axios from "axios";
-import Search from "./components/Search";
-import Weather from "./components/Weather";
+import React, { useState } from "react";
+import axios from "axios";
+import "./index.css";
+import WeatherCard from "./components/WeatherCard";
 
 const App = () => {
-	const [query, setQuery] = useState("");
-	const [weather, setWeather] = useState([]);
+	const [weatherData, setWeatherData] = useState([]);
+	const [error, setError] = useState(false);
 
-	useEffect(() => {
-		if (query !== "") {
-			getWeather();
+	const handleSearch = async (query) => {
+		try {
+			const response = await axios.get(
+				`https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${
+					import.meta.env.VITE_API_KEY
+				}&units=metric`
+			);
+			console.log(response?.data);
+			setWeatherData(response.data);
+			setError(false);
+		} catch (error) {
+			setError(true);
+			console.log(error);
 		}
-	}, []);
-
-	const url = `https://api.openweathermap.org/data/2.5/weather?q=${query}&units=metric&appid=b5b11a99de4ddbfd60181db3aeded6da`;
-
-	const getWeather = async () => {
-		const response = await Axios.get(url);
-		setWeather(response.data);
-	};
-
-	const handleOnChange = (e) => {
-		setQuery(e.target.value);
-	};
-
-	const handleOnClick = () => {
-		getWeather();
-		setQuery("");
 	};
 
 	return (
-		<div className="App">
-			<Search handleOnChange={handleOnChange} query={query} handleOnClick={handleOnClick} />
-			{weather.main && (
-				<Weather
-					city={weather.name}
-					country={weather.sys.country}
-					temp={Math.round(weather.main.temp)}
-					feelsLike={Math.round(weather.main.feels_like)}
-					humidity={weather.main.humidity}
-					description={weather.weather[0].description}
-					windSpeed={weather.wind.speed}
-					icon={weather.weather[0].icon}
-				/>
-			)}
-		</div>
+		<WeatherCard
+			onSearch={handleSearch}
+			temp={weatherData?.main?.temp}
+			humidity={weatherData?.main?.humidity}
+			windSpeed={weatherData?.wind?.speed}
+			description={weatherData?.weather?.[0]?.description}
+			icon={weatherData?.weather?.[0]?.icon}
+			city={weatherData?.name}
+			country={weatherData?.sys?.country}
+			error={error}
+		/>
 	);
 };
 
