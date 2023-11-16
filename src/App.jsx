@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./index.css";
 import WeatherCard from "./components/WeatherCard";
+import "./index.css";
 
 const App = () => {
 	const [weatherData, setWeatherData] = useState([]);
