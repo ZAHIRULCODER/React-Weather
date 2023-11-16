@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BiSolidMap, BiSearch, BiWater, BiWind } from "react-icons/bi";
 import Error from "./Error";
+
 const WeatherCard = ({
 	onSearch,
 	temp,

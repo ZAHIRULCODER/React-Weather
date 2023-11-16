@@ -14,7 +14,7 @@ const App = () => {
 					import.meta.env.VITE_API_KEY
 				}&units=metric`
 			);
-			console.log(response?.data);
+			// console.log(response?.data);
 			setWeatherData(response.data);
 			setError(false);
 		} catch (error) {
